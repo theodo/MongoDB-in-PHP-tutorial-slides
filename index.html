@@ -1,250 +1,421 @@
-<!doctype html>  
+<!doctype html>
 <html lang="en">
-	
-	<head>
-		<meta charset="utf-8">
-		
-		<title>MongoDB in PHP &amp; Doctrine ODM</title>
 
-		<meta name="description" content="How to start with MongoDB in PHP and go further with the Doctrine ODM abstraction layer.">
-		<meta name="author" content="Fabrice A. Bernhard">
-		
-		<link href='http://fonts.googleapis.com/css?family=Metrophobic' rel='stylesheet' type='text/css'>
-		<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-		
-		<link rel="stylesheet" href="css/reset.css">
-		<link rel="stylesheet" href="css/main.css">
+    <head>
+        <meta charset="utf-8">
 
-		<link rel="stylesheet" href="lib/zenburn.css">
-	</head>
-	
-	<body>
-		
-		<div id="reveal">
-			
-			<!-- Any section element inside of this container is displayed as a slide -->
-			<div class="slides">
-				<section>
-					<h1>MongoDB in PHP</h1>
-					<h3 class="inverted"><br/ ><br/ >How to start with MongoDB in PHP...<br/ ><br/ >...and go further with Doctrine ODM</h3>
-					<script>
-						// Delicously hacky. Look away.
-						if( navigator.userAgent.match( /(iPhone|iPad|iPod|Android)/i ) )
-						document.write( '<p style="color: rgba(0,0,0,0.3); text-shadow: none;">('+'Tap to navigate'+')</p>' );
-					</script>
-				</section>
-				
-				<section>
-					<h2>Introduction</h2>
-					<p>
-						This will be an interactive guide through the first steps of using MongoDB in PHP.
-					</p>
-					<p>
-						The presentation is largely based on <a href="http://www.slideshare.net/jwage/doctrine-mongodb-object-document-mapper">Jonathan's Wage "Doctrine MongoDB OODM"</a>is will be an interactive guide through the first steps of using MongoDB in PHP.
-					</p>
-					<p>
-						<i><small>- <a href="http://hakim.se">Hakim El Hattab</a> / <a href="http://twitter.com/hakimel">@hakimel</a></small></i>
-					</p>
-				</section>
-				
-				<!-- Example of nested vertical slides -->
-				<section>
-					<section>
-						<h2>Vertical Slides</h2>
-						<p>
-							Slides can be nested inside of other slides,<br/>
-							try pressing <a href="#/2/1">down</a>.
-						</p>
-						<a href="#/2/1" class="image">
-							<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png">
-						</a>
-					</section>
-					<section>
-						<h2>Basement Level 1</h2>
-						<p>Press down or up to navigate.</p>
-					</section>
-					<section>
-						<h2>Basement Level 2</h2>
-						<p>Cornify</p>
-						<a class="test" href="http://cornify.com">
-							<img width="280" height="326" src="https://s3.amazonaws.com/hakim-static/reveal-js/cornify.gif">
-						</a>
-					</section>
-					<section>
-						<h2>Basement Level 3</h2>
-						<p>That's it, time to go back up.</p>
-						<a href="#/2" class="image">
-							<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" style="-webkit-transform: rotate(180deg);">
-						</a>
-					</section>
-				</section>
+        <title>MongoDB in PHP &amp; Doctrine ODM</title>
 
-				<section>
-					<h2>Holistic Overview</h2>
-					<p>
-						Press <strong>SPACE</strong> to enter the slide overview.
-					</p>
-				</section>
+        <meta name="description" content="How to start with MongoDB in PHP and go further with the Doctrine ODM abstraction layer.">
+        <meta name="author" content="Fabrice A. Bernhard">
 
-				<section>
-					<h2>Transition Styles</h2>
-					<p>
-						You can select from different transitions, like:
-					</p>
-					<ul>
-						<li><a href="http://lab.hakim.se/reveal-js/?transition=cube">Cube</a></li>
-						<li><a href="http://lab.hakim.se/reveal-js/?transition=page">Page</a></li>
-						<li><a href="http://lab.hakim.se/reveal-js/?transition=concave">Concave</a></li>
-					</ul>
-				</section>
-					
-				<section>
-					<h2>Marvelous Unordered List</h2>
-					<ul>
-						<li>No order here</li>
-						<li>Or here</li>
-						<li>Or here</li>
-						<li>Or here</li>
-					</ul>
-				</section>
-				
-				<section>
-					<h2>Fantastic Ordered List</h2>
-					<ol>
-						<li>One is smaller than...</li>
-						<li>Two is smaller than...</li>
-						<li>Three!</li>
-					</ol>
-				</section>
+        <link href='http://fonts.googleapis.com/css?family=Metrophobic' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 
-				<section>
-					<h2>Clever Quotes</h2>
-					<p>
-						These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						The nice thing about standards is that there are so many to choose from</q> and block:
-					</p>
-					<blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						For years there has been a theory that millions of monkeys typing at random on millions of typewriters would 
-						reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.
-					</blockquote>
-				</section>
-				
-				<section>
-					<h2>Pretty Code</h2>
-					<pre><code contenteditable>
-	var supports3DTransforms =  document.body.style['webkitPerspective'] !== undefined || 
-					document.body.style['MozPerspective'] !== undefined ||
-					document.body.style['perspective'] !== undefined;
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/main.css">
 
-	function linkify( selector ) {
-	    if( supports3DTransforms ) {
-	        
-	        var nodes = document.querySelectorAll( selector );
+        <link rel="stylesheet" href="lib/github.css">
+    </head>
 
-	        for( var i = 0, len = nodes.length; i < len; i++ ) {
-	            var node = nodes[i];
+    <body>
 
-	            if( !node.className || !node.className.match( /roll/g ) ) {
-	                node.className += ' roll';
-	                node.innerHTML = '<span data-title="'+ node.text +'">' + node.innerHTML + '</span>';
-	            }
-	        };
-	    }
-	}
+        <div id="reveal">
 
-	linkify( 'a' );
-					</code></pre>
-					<p>Courtesy of <a href="http://softwaremaniacs.org/soft/highlight/en/description/">highlight.js</a>.</p>
-				</section>
-				
-				<section>
-					<h2>Intergalactic Interconnections</h2>
-					<p>
-						You can link between slides internally,<br/>
-						<a href="#/2/3">like this</a>.
-					</p>
-				</section>
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+                <section>
+                    <h1>MongoDB in PHP</h1>
+                    <h3 class="inverted">How to start with MongoDB in PHP...<br/ ><br/ >...and go further with Doctrine ODM</h3>
+                    <script>
+                        // Delicously hacky. Look away.
+                        if( navigator.userAgent.match( /(iPhone|iPad|iPod|Android)/i ) )
+                        document.write( '<p style="color: rgba(0,0,0,0.3); text-shadow: none;">('+'Tap to navigate'+')</p>' );
+                    </script>
+                </section>
 
-				<section>
-					<h2>Fragmented Views</h2>
-					<p>Hit the next arrow...</p>
-					<p class="fragment">... to step through ...</p>
-					<ol>
-						<li class="fragment"><code>any type</code></li>
-						<li class="fragment"><em>of view</em></li>
-						<li class="fragment"><strong>fragments</strong></li>
-					</ol>
-				</section>
-				
-				<section>
-					<h2>Spectacular image!</h2>
-					<a class="image" href="http://hakim.se/experiments/html5/breakdom/" target="_blank">
-						<img width="320" height="412" src="https://s3.amazonaws.com/hakim-static/reveal-js/breakdom.png">
-					</a>
-				</section>
-				
-				<section>
-					<h2>Stellar Links</h2>
-					<ul>
-						<li><a href="https://github.com/hakimel/reveal.js">Source code on github</a></li>
-						<li><a href="http://hakim.se/projects/reveal-js">Read more on my site</a></li>
-						<li><a href="http://twitter.com/hakimel">Follow me on Twitter</a></li>
-					</ul>
-				</section>
-				
-				<section>
-					<h1>THE END</h1>
-					<h3 class="inverted">BY Hakim El Hattab / hakim.se</h3>
-				</section>
-			</div>
+                <section>
 
-			<!-- The navigational controls UI -->
-			<aside class="controls">
-				<a class="left" href="#">&#x25C4;</a>
-				<a class="right" href="#">&#x25BA;</a>
-				<a class="up" href="#">&#x25B2;</a>
-				<a class="down" href="#">&#x25BC;</a>
-			</aside>
+                    <h2>Purpose</h2>
 
-			<!-- Displays presentation progress, max value changes via JS to reflect # of slides -->
-			<div class="progress"><span></span></div>
-			
-		</div>
-		
-		<script src="js/reveal.js"></script>
-		<script src="lib/highlight.js"></script>
-		<script>
-			// Parse the query string into a key/value object
-			var query = {};
-			location.search.replace( /[A-Z0-9]+?=(\w*)/gi, function(a) {
-				query[ a.split( '=' ).shift() ] = a.split( '=' ).pop();
-			} );
 
-			Reveal.initialize({
-				// Display controls in the bottom right corner
-				controls: true,
+                    <p>
+                        This is an interactive guide through the first steps of using MongoDB in PHP.
+                    </p>
+                    <br />
+                    <p>
+                        The presentation is largely based on Jonathan Wage's <a href="http://www.slideshare.net/jwage/doctrine-mongodb-object-document-mapper">Doctrine MongoDB ODM</a> presentation
+http://www.slideshare.net/kriswallsmith/mongod-pdxphp
+                    </p>
 
-				// Display a presentation progress bar
-				progress: true,
+                    <br />
+                    <p>
+                        This guide tries to address both Ubuntu and MacOS X users with PHP5 already installed
+                    </p>
 
-				// If true; each slide will be pushed to the browser history
-				history: true,
+                </section>
 
-				// Flags if mouse wheel navigation should be enabled
-				mouseWheel: true,
 
-				// Apply a 3D roll to links on hover
-				rollingLinks: true,
+                <section>
+                    <section>
+                        <h2>Starting on Ubuntu</h2>
+                        <h4 class="inverted">Installing MongoDB for PHP</h4>
 
-				// UI style
-				theme: query.theme || 'default', // default/neon
+                        <pre><code>
+  sudo apt-get install mongodb
+  sudo apt-get install php-pear php5-dev
+  sudo pecl install mongo
+                        </code></pre>
 
-				// Transition style
-				transition: query.transition || 'default' // default/cube/page/concave/linear(2d)
-			});
+                    </section>
 
-			hljs.initHighlightingOnLoad();
-		</script>
+                    <section>
+                        <h2>Configuring on Ubuntu</h2>
+                        <h4 class="inverted">Installing MongoDB for PHP</h4>
 
-	</body>
+                        <pre><code>
+  #configuration file /etc/php5/conf.d/mongo.ini
+
+  extension=mongo.so
+                        </code></pre>
+
+                    </section>
+
+                    <section>
+                        <h2>Starting on MacOS X</h2>
+                        <h4 class="inverted">Installing MongoDB for PHP</h4>
+
+                        <pre><code>
+  sudo port install php5-mongo
+
+  sudo mkdir /opt/local/var/db/mongodb_data
+  sudo mkdir /opt/local/var/log/mongodb
+  sudo touch /opt/local/var/log/mongodb/mongodb.log
+  sudo mkdir /opt/local/etc/mongodb/
+                        </code></pre>
+
+                    </section>
+
+                    <section>
+                        <h2>Configuring on MacOS X</h2>
+                        <h4 class="inverted">Installing MongoDB for PHP</h4>
+
+                        <pre><code>
+  #configuration file /opt/local/etc/mongodb/mongod.conf
+
+  # Store data alongside MongoDB instead of the default, /data/db/
+  dbpath = /opt/local/var/db/mongodb_data
+  # Only accept local connections
+  bind_ip = 127.0.0.1
+  # Running as daemon
+  fork = true
+  # Take log
+  logpath = /opt/local/var/log/mongodb/mongodb.log
+  logappend = true
+                        </code></pre>
+
+                    </section>
+
+                    <section>
+                        <h2>Launching on MacOS X</h2>
+                        <h4 class="inverted">Installing MongoDB for PHP</h4>
+
+                        <pre><code>
+  sudo mongod -f /opt/local/etc/mongodb/mongod.conf
+                        </code></pre>
+
+                    </section>
+                </section>
+
+
+
+
+                <section>
+                    <section>
+                        <h2>Connecting</h2>
+                        <h4 class="inverted">First steps in PHP</h4>
+
+                        <pre><code class="php">
+  $mongo = new Mongo('mongodb://localhost');
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Selecting a database</h2>
+                        <h4 class="inverted">First steps in PHP</h4>
+
+                        <pre><code class="php">
+  $mongo = new Mongo('mongodb://localhost');
+  $db = $mongo->selectDB('dbname');
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Selecting a collection</h2>
+                        <h4 class="inverted">First steps in PHP</h4>
+
+                        <pre><code class="php">
+  $coll = $db->selectCollection('measurements');
+                        </code></pre>
+                    </section>
+
+
+                    <section>
+                        <h2>Inserting a document</h2>
+                        <h4 class="inverted">First steps in PHP</h4>
+
+                        <pre><code class="php">
+  $datetime = date('Y-m-d H:i:s');
+  $measurement = array(
+    'captor1' => 981,
+    'captor2' => 954,
+    'datetime' => $datetime
+  );
+  $coll->insert($measurement);
+
+  var_dump($measurement);
+  echo $measurement['_id'] . "\n";
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Updating a document</h2>
+                        <h4 class="inverted">First steps in PHP</h4>
+
+                        <pre><code class="php">
+  $measurement = $coll->findOne(
+    array(
+      'datetime' => $datetime
+    )
+  );
+  $measurement['captor1'] = 982;
+  $measurement['captor2'] = 955;
+  $coll->save($measurement);
+
+  var_dump($measurement);
+  echo $measurement['_id'] . "\n";
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Atomic update of a document</h2>
+                        <h4 class="inverted">First steps in PHP</h4>
+
+                        <pre><code class="php">
+  $coll->update(
+    array('datetime' => $datetime),
+    array(
+      '$set' => array(
+        'captor1' => 983,
+        'captor2' => 956
+      )
+    )
+  );
+
+  $measurement = $coll->findOne(
+    array('datetime' => $datetime)
+  );
+  var_dump($measurement);
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Removing a document</h2>
+                        <h4 class="inverted">First steps in PHP</h4>
+
+                        <pre><code class="php">
+  $coll->remove(
+    array('datetime' => $datetime)
+  );
+
+  $measurement = $coll->findOne(
+    array('datetime' => $datetime)
+  );
+  var_dump($measurement); // NULL
+                        </code></pre>
+                    </section>
+
+
+                </section>
+
+
+
+
+                <section>
+
+                    <section>
+                        <h2>Doctrine ODM</h2>
+                        <h4 class="inverted">An abstraction layer for your documents</h4>
+
+                        <ul>
+                        	<li>Manages the persistent state of PHP objects</li>
+                        	<li>Implements <a href="http://martinfowler.com/eaaCatalog/unitOfWork.html">UnitOfWork</a> for change tracking</li>
+                        	<li>Handles references between documents</li>
+                        	<li>Provides lifecycle event listeners (useful for migrations)</li>
+                        </ul>
+                    </section>
+
+
+
+                <section>
+                    <h2>Transition Styles</h2>
+                    <p>
+                        You can select from different transitions, like:
+                    </p>
+                    <ul>
+                        <li><a href="http://lab.hakim.se/reveal-js/?transition=cube">Cube</a></li>
+                        <li><a href="http://lab.hakim.se/reveal-js/?transition=page">Page</a></li>
+                        <li><a href="http://lab.hakim.se/reveal-js/?transition=concave">Concave</a></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Marvelous Unordered List</h2>
+                    <ul>
+                        <li>No order here</li>
+                        <li>Or here</li>
+                        <li>Or here</li>
+                        <li>Or here</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Fantastic Ordered List</h2>
+                    <ol>
+                        <li>One is smaller than...</li>
+                        <li>Two is smaller than...</li>
+                        <li>Three!</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2>Clever Quotes</h2>
+                    <p>
+                        These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
+                        The nice thing about standards is that there are so many to choose from</q> and block:
+                    </p>
+                    <blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
+                        For years there has been a theory that millions of monkeys typing at random on millions of typewriters would
+                        reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.
+                    </blockquote>
+                </section>
+
+                <section>
+                    <h2>Pretty Code</h2>
+                    <pre><code contenteditable>
+    var supports3DTransforms =  document.body.style['webkitPerspective'] !== undefined ||
+                    document.body.style['MozPerspective'] !== undefined ||
+                    document.body.style['perspective'] !== undefined;
+
+    function linkify( selector ) {
+        if( supports3DTransforms ) {
+
+            var nodes = document.querySelectorAll( selector );
+
+            for( var i = 0, len = nodes.length; i < len; i++ ) {
+                var node = nodes[i];
+
+                if( !node.className || !node.className.match( /roll/g ) ) {
+                    node.className += ' roll';
+                    node.innerHTML = '<span data-title="'+ node.text +'">' + node.innerHTML + '</span>';
+                }
+            };
+        }
+    }
+
+    linkify( 'a' );
+                    </code></pre>
+                    <p>Courtesy of <a href="http://softwaremaniacs.org/soft/highlight/en/description/">highlight.js</a>.</p>
+                </section>
+
+                <section>
+                    <h2>Intergalactic Interconnections</h2>
+                    <p>
+                        You can link between slides internally,<br/>
+                        <a href="#/2/3">like this</a>.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Fragmented Views</h2>
+                    <p>Hit the next arrow...</p>
+                    <p class="fragment">... to step through ...</p>
+                    <ol>
+                        <li class="fragment"><code>any type</code></li>
+                        <li class="fragment"><em>of view</em></li>
+                        <li class="fragment"><strong>fragments</strong></li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2>Spectacular image!</h2>
+                    <a class="image" href="http://hakim.se/experiments/html5/breakdom/" target="_blank">
+                        <img width="320" height="412" src="https://s3.amazonaws.com/hakim-static/reveal-js/breakdom.png">
+                    </a>
+                </section>
+
+                <section>
+                    <h2>Stellar Links</h2>
+                    <ul>
+                        <li><a href="https://github.com/hakimel/reveal.js">Source code on github</a></li>
+                        <li><a href="http://hakim.se/projects/reveal-js">Read more on my site</a></li>
+                        <li><a href="http://twitter.com/hakimel">Follow me on Twitter</a></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h1>THE END</h1>
+                    <h3 class="inverted">BY Hakim El Hattab / hakim.se</h3>
+                </section>
+            </div>
+
+            <!-- The navigational controls UI -->
+            <aside class="controls">
+                <a class="left" href="#">&#x25C4;</a>
+                <a class="right" href="#">&#x25BA;</a>
+                <a class="up" href="#">&#x25B2;</a>
+                <a class="down" href="#">&#x25BC;</a>
+            </aside>
+
+            <!-- Displays presentation progress, max value changes via JS to reflect # of slides -->
+            <div class="progress"><span></span></div>
+
+        </div>
+
+        <script src="js/reveal.js"></script>
+        <script src="lib/highlight.js"></script>
+        <script>
+            // Parse the query string into a key/value object
+            var query = {};
+            location.search.replace( /[A-Z0-9]+?=(\w*)/gi, function(a) {
+                query[ a.split( '=' ).shift() ] = a.split( '=' ).pop();
+            } );
+
+            Reveal.initialize({
+                // Display controls in the bottom right corner
+                controls: false,
+
+                // Display a presentation progress bar
+                progress: true,
+
+                // If true; each slide will be pushed to the browser history
+                history: true,
+
+                // Flags if mouse wheel navigation should be enabled
+                mouseWheel: true,
+
+                // Apply a 3D roll to links on hover
+                rollingLinks: false,
+
+                // UI style
+                theme: query.theme || 'default', // default/neon
+
+                // Transition style
+                transition: query.transition || 'default' // default/cube/page/concave/linear(2d)
+            });
+
+            hljs.initHighlightingOnLoad();
+        </script>
+
+    </body>
 </html>
